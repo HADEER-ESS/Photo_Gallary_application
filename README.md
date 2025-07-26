@@ -72,7 +72,7 @@
 <h6>Internet connectivity (for first time)</h6>
 
 <h3>How to Run Locally</h3>
-<li>Clone: git clone https://github.com/your-username/your-app.git</li>
+<li>Clone: git clone https://github.com/HADEER-ESS/Photo_Gallary_application.git</li>
 <li>Click on the folder, and open it with Android Studio</li>
 <li>Sync gradle: File > Sync Project with Gradle Files</li>
 <li> Run the app: use Emulator, or Physical device</li>
