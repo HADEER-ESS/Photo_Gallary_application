@@ -1,0 +1,107 @@
+<h1>Application Required Screenshots</h1>
+
+<h3>Online Dark Mode</h3>
+<img width="350" height="1000" alt="online_darkMode" src="https://github.com/user-attachments/assets/bd49f781-8356-4beb-aad7-1ea2478f10ec" />
+
+<h3>Online Light Mode</h3>
+<img width="350" height="1000" alt="online_lightMode" src="https://github.com/user-attachments/assets/da2a80ab-16d4-48ca-be87-622c7a4a88bf" />
+
+
+<h3>Offline Dark Mode</h3>
+<img width="350" height="1000" alt="offline_darkMode" src="https://github.com/user-attachments/assets/11ac86d3-e97e-4ee1-9944-eda540c59fa0" />
+
+<h3>Offline Light Mode</h3>
+<img width="350" height="1000" alt="offline_lightMode" src="https://github.com/user-attachments/assets/56a5d276-5be8-4be9-9874-e68882d987ff" />
+
+
+<h3>Loading State</h3>
+<img width="350" height="1000" alt="loading_state" src="https://github.com/user-attachments/assets/b94b4b6d-830d-4d56-8f06-d21bd234a543" />
+
+<h3>Error State</h3>
+<img width="350" height="1000" alt="error_state" src="https://github.com/user-attachments/assets/5065e074-8f5f-4350-a408-8c43824bafb9" />
+
+<h3>Network Status Indicator</h3>
+<img width="350" height="1000" alt="Network_indicator" src="https://github.com/user-attachments/assets/6978c973-f6bd-4580-becf-d2f8ecf12e38" />
+
+
+
+<h3>A detailed explanation of the App</h3>
+<p>
+  <h5>Architecture: MVI</h5>
+  <br/>
+  <h5>
+    Clean Architecture Layer:
+  </h5>
+  <li>Domain: for Entities, Repositories(interface), UseCases</li>
+  <li>Data: for Repositories implementation Logic, API services, Application Database instance implementation, helper utilities (Theme-Preference, Check Internet Connectivity)</li>
+  <li>
+      App: for Dependency Injection, ViewModels, and UI
+  </li>
+
+  <h5>
+     Cache: Room Database: 
+  </h5>
+<li>
+  Store the image URL as a file in the Database to avoid any API calls
+</li>
+<h5>
+  Navigation Component
+</h5>
+<li>
+  Create two fragments in one activity and navigate through them (splash, home)
+</li>
+  <h5>
+    Glide
+  </h5>
+
+  <li>
+     Use for rendering an image from a URL, or from cache as a File string
+  </li>
+ 
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
