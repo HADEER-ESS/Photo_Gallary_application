@@ -50,13 +50,16 @@ class HomeFragment : Fragment() {
         val photosDataBase = getInstance(requireContext())
         photosDataBase.photoDao().getAllPhotos().observe(viewLifecycleOwner) { data ->
             if(data.isEmpty() && CheckInternetConnectivity.isInternetEnable(requireContext())){
+                binding.errorNetworkMessageTxt.visibility = View.GONE
                 viewModel.getPhotosData()
                 eventListener()
             }
             if(data.isEmpty() && !CheckInternetConnectivity.isInternetEnable(requireContext())){
-                Toast.makeText(requireContext(), "Something went wrong, no data to show, please open you internet connection", Toast.LENGTH_LONG).show()
+                binding.errorNetworkMessageTxt.visibility = View.VISIBLE
+                Toast.makeText(requireContext(), getString(R.string.error_message_in_bo_data), Toast.LENGTH_LONG).show()
             }
             if(data.isNotEmpty() &&  !CheckInternetConnectivity.isInternetEnable(requireContext()) || CheckInternetConnectivity.isInternetEnable(requireContext())){
+                binding.errorNetworkMessageTxt.visibility = View.GONE
                 initializeRoom()
             }
         }
@@ -85,6 +88,7 @@ class HomeFragment : Fragment() {
         }
     }
     private fun handleIsLoading(load : Boolean){
+        println("is loading stat $load")
         if (load){
             binding.loader.visibility = View.VISIBLE
         }

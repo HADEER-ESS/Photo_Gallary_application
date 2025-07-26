@@ -2,13 +2,9 @@ package com.hadeer.photogalleryapplication.ui
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
-import com.hadeer.data.repoimpl.PhotoDao
 import com.hadeer.domain.NetworkResponse
 import com.hadeer.domain.entity.Photo
 import com.hadeer.domain.usecase.PhotoUseCase
@@ -19,17 +15,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.lifecycle.asLiveData
 import com.hadeer.data.remote.getInstance
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
-import java.net.HttpURLConnection
-import java.net.URL
 
 @HiltViewModel
 class PhotosViewModel @Inject constructor(
@@ -49,7 +39,6 @@ class PhotosViewModel @Inject constructor(
             _photosIntent.emit(
                 PhotosIntent.Idle(currentState)
             )
-
             val response = photoUseCase.getPhotosData()
             when(response){
                 is NetworkResponse.Success ->{

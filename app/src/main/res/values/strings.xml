@@ -3,4 +3,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="response_image">response_image</string>
+    <string name="error_message_in_bo_data">Something went wrong, no data to show, please open you internet connection</string>
 </resources>
