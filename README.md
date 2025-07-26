@@ -71,21 +71,9 @@
 
 
 <h3>Folder Structure</h3>
-<p>
-├── app/
-│   ├── ui/           ← Fragments, ViewModels, UI states, intents
-    └── di/           ← Hilt modules
-├── data/
-│   ├── repoImpl/     ← Repository implementations
-│   ├── remote/       ← API service, DTOs
-│   └── ./local        ← theme shared preferences, check internet connectivity utility
-├── domain/
-│   ├── entity/       ← Entities (for response, cache data), Mapper
-│   ├── repo/         ← interface repo
-│   └── usecase/      ← Business logic
-│   └── ./local      ← Network Response cases (Success, Network Error, Api Error, Unknown Error)
+<img width="777" height="282" alt="Screenshot from 2025-07-27 01-08-05" src="https://github.com/user-attachments/assets/a25ed683-1f9e-4e60-a8ea-b5440bbc3164" />
 
-</p>
+
 
 
 
