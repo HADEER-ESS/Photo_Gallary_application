@@ -25,6 +25,7 @@
 
 
 
+
 <h3>A detailed explanation of the App</h3>
 <p>
   <h5>Architecture: MVI</h5>
@@ -58,6 +59,13 @@
      Use for rendering an image from a URL, or from cache as a File string
   </li>
 </p>
+
+<h3>Rendered Data Conditions</h3>
+<h5> User enters screen check (internet, cache data)  </h5>
+<li> → if no internet AND no data in cache → show error text message </li>
+<li> → if no internet AND there is data in cache → data sends to Adaptor, and render photos </li>
+<li> → if there is internet AND no data in cache → call API and send data to Adaptor </li>
+<li> → if there is internet AND there is data in cache → data sends to Adaptor from cache </li>
 
 <h3>Project installation requirements</h3>
 <h6>min SDK 24</h6>
