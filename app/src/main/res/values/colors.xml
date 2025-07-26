@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="main_text">#0A2472</color>
+    <color name="switchThumb">#000000</color>    <!-- Black thumb -->
+    <color name="switchTrack">#CCCCCC</color>
 </resources>

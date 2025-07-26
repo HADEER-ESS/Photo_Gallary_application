@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FFFFFFFF</color>
+    <color name="white">#FF000000</color>
+    <color name="main_text">#FFFFFF</color>
+    <color name="switchThumb">#FFFFFF</color>    <!-- White thumb -->
+    <color name="switchTrack">#888888</color>
+</resources>
