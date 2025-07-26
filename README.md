@@ -57,7 +57,34 @@
   <li>
      Use for rendering an image from a URL, or from cache as a File string
   </li>
- 
+</p>
+
+<h3>Project installation requirements</h3>
+<h6>min SDK 24</h6>
+<h6>Internet connectivity (for first time)</h6>
+
+<h3>How to Run Locally</h3>
+<li>Clone: git clone https://github.com/your-username/your-app.git</li>
+<li>Click on the folder, and open it with Android Studio</li>
+<li>Sync gradle: File > Sync Project with Gradle Files</li>
+<li> Run the app: use Emulator, or Physical device</li>
+
+
+<h3>Folder Structure</h3>
+<p>
+├── app/
+│   ├── ui/           ← Fragments, ViewModels, UI states, intents
+    └── di/           ← Hilt modules
+├── data/
+│   ├── repoImpl/     ← Repository implementations
+│   ├── remote/       ← API service, DTOs
+│   └── ./local        ← theme shared preferences, check internet connectivity utility
+├── domain/
+│   ├── entity/       ← Entities (for response, cache data), Mapper
+│   ├── repo/         ← interface repo
+│   └── usecase/      ← Business logic
+│   └── ./local      ← Network Response cases (Success, Network Error, Api Error, Unknown Error)
+
 </p>
 
 
