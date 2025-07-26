@@ -69,6 +69,10 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
+    // Navigation Component
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
     //Dagger Hilt dependencies
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
@@ -79,13 +83,13 @@ dependencies {
     implementation(libs.converter.gson.v290)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     //Live Data ViewModel
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-
     //for Glide
     implementation(libs.glide)
-
-
+    annotationProcessor(libs.compiler)
 }

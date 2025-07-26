@@ -1,0 +1,17 @@
+package com.hadeer.data.repoimpl
+
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.hadeer.domain.entity.Photo
+
+@Dao
+interface PhotoDao {
+    @Query("SELECT * FROM photos")
+    fun getAllPhotos() : LiveData<List<Photo>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun cachePhoto(photo: Photo)
+}

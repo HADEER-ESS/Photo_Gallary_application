@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -52,6 +53,12 @@ dependencies {
     //Coroutines dependencies
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+
+    //ROOM
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.lifecycle.livedata.ktx.v260)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx.v260)
 
     //know reference of Domain layer
     implementation(project(":domain"))
