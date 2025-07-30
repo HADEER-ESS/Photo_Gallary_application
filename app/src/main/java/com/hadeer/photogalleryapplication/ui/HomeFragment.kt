@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
                 ThemePreferance.setCurrentThemeState(requireContext(), "light")
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
-            requireActivity().recreate()
+//            requireActivity().recreate()
         }
     }
 }
