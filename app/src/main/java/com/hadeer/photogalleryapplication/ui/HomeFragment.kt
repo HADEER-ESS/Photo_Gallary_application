@@ -78,7 +78,10 @@ class HomeFragment : Fragment() {
                             Toast.makeText(requireContext(), it.state.apiError, Toast.LENGTH_LONG).show()
                         }
                     }
-                    is PhotosIntent.NetworkFailed ->{}
+                    is PhotosIntent.NetworkFailed ->{
+                        handleIsLoading(it.state.isLoading)
+                        Toast.makeText(requireContext(), it.state.apiError, Toast.LENGTH_LONG).show()
+                    }
                     is PhotosIntent.Success->{
                         handleIsLoading(it.state.isLoading)
                         binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), it.state.photosData)
@@ -101,7 +104,6 @@ class HomeFragment : Fragment() {
         val photosDataBase = getInstance(requireContext())
         photosDataBase.photoDao().getAllPhotos().observe(viewLifecycleOwner){
             data ->
-                println("stored data $data")
                 val customizedList = data.map { it.toMap() }
                 binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), customizedList)
 
