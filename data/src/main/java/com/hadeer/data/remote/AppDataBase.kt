@@ -9,22 +9,30 @@ import com.hadeer.domain.entity.Photo
 
 @Database(entities = [Photo::class], version = 1)
 abstract class AppDataBase : RoomDatabase() {
+    abstract val photoDao: PhotoDao
 
-    abstract fun photoDao(): PhotoDao
-}
-private var photoDatabaseInstance : AppDataBase ?= null
-
+    companion object{
         private val PHOTOS_DATABASE = "photo_db"
+        @Volatile
+        private var INSTANCE : AppDataBase? = null
 
+        fun getInstance(context : Context): AppDataBase{
+            synchronized(this){
+                var instance = INSTANCE
 
+                if(instance == null){
+                    instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        AppDataBase::class.java,
+                        PHOTOS_DATABASE
+                    ).fallbackToDestructiveMigration()
+                        .build()
+                    INSTANCE = instance
+                }
 
-        @Synchronized
-        fun getInstance(context : Context):AppDataBase{
-            if(photoDatabaseInstance==null){
-                photoDatabaseInstance = Room.databaseBuilder(
-                    context.applicationContext, AppDataBase::class.java, PHOTOS_DATABASE
-                ).build()
+                return instance
             }
-            return photoDatabaseInstance!!
         }
+    }
+}
 

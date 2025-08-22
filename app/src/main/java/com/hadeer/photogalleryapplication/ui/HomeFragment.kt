@@ -1,7 +1,6 @@
 package com.hadeer.photogalleryapplication.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,26 +8,24 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hadeer.data.CheckInternetConnectivity
 import com.hadeer.data.ThemePreferance
 import com.hadeer.data.remote.AppDataBase
-import com.hadeer.data.remote.getInstance
-import com.hadeer.domain.entity.Photo
 import com.hadeer.domain.entity.toMap
 import com.hadeer.photogalleryapplication.R
 import com.hadeer.photogalleryapplication.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
     private val viewModel : PhotosViewModel by viewModels()
+    private val database = AppDataBase
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +44,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageResponseContainer.layoutManager = GridLayoutManager(context, 2)
-        val photosDataBase = getInstance(requireContext())
-        photosDataBase.photoDao().getAllPhotos().observe(viewLifecycleOwner) { data ->
+        val photosDataBase = database.getInstance(requireContext())
+        photosDataBase.photoDao.getAllPhotos().observe(viewLifecycleOwner) { data ->
             if(data.isEmpty() && CheckInternetConnectivity.isInternetEnable(requireContext())){
                 binding.errorNetworkMessageTxt.visibility = View.GONE
                 viewModel.getPhotosData()
@@ -66,7 +63,7 @@ class HomeFragment : Fragment() {
         handleToggleMode()
     }
     private fun eventListener(){
-        coroutineScope.launch {
+        lifecycleScope.launch {
             viewModel.photosIntent.collect{
                 when(it){
                     is PhotosIntent.Idle ->{
@@ -101,8 +98,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun initializeRoom(){
-        val photosDataBase = getInstance(requireContext())
-        photosDataBase.photoDao().getAllPhotos().observe(viewLifecycleOwner){
+        val photosDataBase = database.getInstance(requireContext())
+        photosDataBase.photoDao.getAllPhotos().observe(viewLifecycleOwner){
             data ->
                 val customizedList = data.map { it.toMap() }
                 binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), customizedList)
