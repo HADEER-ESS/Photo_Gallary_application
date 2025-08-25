@@ -75,6 +75,7 @@ dependencies {
 
     //Dagger Hilt dependencies
     implementation(libs.hilt.android)
+    androidTestImplementation(libs.androidx.core.testing)
     kapt(libs.hilt.compiler)
     //OkHttp
     implementation(libs.okhttp)
@@ -92,4 +93,12 @@ dependencies {
     //for Glide
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
+    testImplementation(kotlin("test"))
+
+
+    //TEST
+    // In your app-level build.gradle
+    testImplementation(libs.androidx.core.testing) // For InstantTaskExecutorRule
+    testImplementation(libs.kotlinx.coroutines.test.v173) // For runTest
+    testImplementation(libs.kotlinx.coroutines.test.v16)
 }

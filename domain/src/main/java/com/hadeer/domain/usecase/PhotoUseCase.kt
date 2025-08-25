@@ -8,4 +8,6 @@ import com.hadeer.domain.repo.PhotosRepo
 
 class PhotoUseCase(private val photoRepo : PhotosRepo){
     suspend fun getPhotosData():NetworkResponse<List<PhotoModel>> = photoRepo.getAllPhotos()
+    suspend fun getCachedPhotos():List<PhotoModel> = photoRepo.getAllCachedData()
+    suspend fun addNewPhotoItemData(item : Photo) = photoRepo.addNewItemData(item)
 }

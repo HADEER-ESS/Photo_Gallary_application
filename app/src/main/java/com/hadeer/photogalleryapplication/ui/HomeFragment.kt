@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
     private val viewModel : PhotosViewModel by viewModels()
-    private val database = AppDataBase
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +36,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+        viewModel.getPhotosData()
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -44,26 +44,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageResponseContainer.layoutManager = GridLayoutManager(context, 2)
-        val photosDataBase = database.getInstance(requireContext())
-        photosDataBase.photoDao.getAllPhotos().observe(viewLifecycleOwner) { data ->
-            if(data.isEmpty() && CheckInternetConnectivity.isInternetEnable(requireContext())){
-                binding.errorNetworkMessageTxt.visibility = View.GONE
-                viewModel.getPhotosData()
-                eventListener()
-            }
-            if(data.isEmpty() && !CheckInternetConnectivity.isInternetEnable(requireContext())){
-                binding.errorNetworkMessageTxt.visibility = View.VISIBLE
-                Toast.makeText(requireContext(), getString(R.string.error_message_in_bo_data), Toast.LENGTH_LONG).show()
-            }
-            if(data.isNotEmpty() &&  !CheckInternetConnectivity.isInternetEnable(requireContext()) || CheckInternetConnectivity.isInternetEnable(requireContext())){
-                binding.errorNetworkMessageTxt.visibility = View.GONE
-                initializeRoom()
-            }
-        }
+        eventListener()
         handleToggleMode()
     }
     private fun eventListener(){
-        lifecycleScope.launch {
+        coroutineScope.launch {
             viewModel.photosIntent.collect{
                 when(it){
                     is PhotosIntent.Idle ->{
@@ -71,12 +56,16 @@ class HomeFragment : Fragment() {
                     }
                     is PhotosIntent.Failed ->{
                         handleIsLoading(it.state.isLoading)
+                        if(it.state.photosFromStorage.isNotEmpty()){
+                            binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), it.state.photosFromStorage)
+                        }
                         if(!it.state.isSuccess){
                             Toast.makeText(requireContext(), it.state.apiError, Toast.LENGTH_LONG).show()
                         }
                     }
                     is PhotosIntent.NetworkFailed ->{
                         handleIsLoading(it.state.isLoading)
+                        binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), it.state.photosFromStorage)
                         Toast.makeText(requireContext(), it.state.apiError, Toast.LENGTH_LONG).show()
                     }
                     is PhotosIntent.Success->{
@@ -97,16 +86,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initializeRoom(){
-        val photosDataBase = database.getInstance(requireContext())
-        photosDataBase.photoDao.getAllPhotos().observe(viewLifecycleOwner){
-            data ->
-                val customizedList = data.map { it.toMap() }
-                binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), customizedList)
-
-        }
-
-    }
 
     private fun handleToggleMode(){
         val switch = binding.topSection.themeSwitch

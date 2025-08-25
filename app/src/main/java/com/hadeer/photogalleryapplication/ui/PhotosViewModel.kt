@@ -3,19 +3,25 @@ package com.hadeer.photogalleryapplication.ui
 import android.app.Application
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
+import com.hadeer.data.remote.AppDataBase
+import com.hadeer.data.repoimpl.PhotoDao
 import com.hadeer.domain.NetworkResponse
 import com.hadeer.domain.entity.Photo
+import com.hadeer.domain.entity.PhotoModel
+import com.hadeer.domain.entity.toMap
+import com.hadeer.domain.repo.PhotosRepo
 import com.hadeer.domain.usecase.PhotoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.hadeer.data.remote.getInstance
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import java.io.File
@@ -24,14 +30,13 @@ import java.io.FileOutputStream
 @HiltViewModel
 class PhotosViewModel @Inject constructor(
     private val photoUseCase: PhotoUseCase,
-    val context :Application
+    private val context :Application
 ): ViewModel() {
     private var currentState = PhotosState()
     private val _photosIntent = MutableSharedFlow<PhotosIntent>()
     val photosIntent = _photosIntent.asSharedFlow()
 
-
-    fun getPhotosData(){
+     fun getPhotosData(){
         viewModelScope.launch {
             currentState = currentState.copy(
                 isLoading = true
@@ -70,11 +75,22 @@ class PhotosViewModel @Inject constructor(
                     )
                 }
                 is NetworkResponse.UnknownError ->{
-                    currentState = currentState.copy(
-                        isLoading = false,
-                        isSuccess = false,
-                        apiError = response.error.message!!
-                    )
+                    val storedData = getDataFromCache()
+                    if(storedData.isNotEmpty()){
+                        currentState = currentState.copy(
+                            isLoading = false,
+                            isSuccess = false,
+                            photosFromStorage = storedData,
+                            apiError = response.error.message!!
+                        )
+                    }
+                    else{
+                        currentState = currentState.copy(
+                            isLoading = false,
+                            isSuccess = false,
+                            apiError = response.error.message!!
+                        )
+                    }
                     _photosIntent.emit(
                         PhotosIntent.Failed(currentState)
                     )
@@ -83,7 +99,8 @@ class PhotosViewModel @Inject constructor(
                     currentState = currentState.copy(
                         isLoading = false,
                         isSuccess = false,
-                        apiError = response.error.message!!
+                        apiError = response.error.message!!,
+                        photosFromStorage = getDataFromCache()
                     )
                     _photosIntent.emit(
                         PhotosIntent.NetworkFailed(currentState)
@@ -93,14 +110,20 @@ class PhotosViewModel @Inject constructor(
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    fun insertPhotos(photo : Photo){
-        GlobalScope.launch {
-            getInstance(context).photoDao().cachePhoto(photo)
+    private suspend fun getDataFromCache() : List<PhotoModel>{
+        return withContext(Dispatchers.IO){
+            photoUseCase.getCachedPhotos()
         }
     }
 
-     suspend fun downloadAndSaveImage(url: String?): String? = withContext(Dispatchers.IO){
+    private fun insertPhotos(photo : Photo){
+        viewModelScope.launch {
+//            AppDataBase.getInstance(context).photoDao.cachePhoto(photo)
+            photoUseCase.addNewPhotoItemData(photo)
+        }
+    }
+
+     private suspend fun downloadAndSaveImage(url: String?): String? = withContext(Dispatchers.IO){
         val bitmap = Glide.with(context)
             .asBitmap()
             .load(url)
@@ -117,3 +140,4 @@ class PhotosViewModel @Inject constructor(
         return@withContext file.absolutePath // Save this in Room
     }
 }
+

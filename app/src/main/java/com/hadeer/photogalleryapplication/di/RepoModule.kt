@@ -2,6 +2,7 @@ package com.hadeer.photogalleryapplication.di
 
 import android.content.Context
 import com.hadeer.data.remote.ApiService
+import com.hadeer.data.repoimpl.PhotoDao
 import com.hadeer.data.repoimpl.PhotosRepoImpl
 import com.hadeer.domain.repo.PhotosRepo
 import dagger.Module
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 object RepoModule {
 
     @Provides
-    fun providePhotosRepo(apiService: ApiService , @ApplicationContext context: Context):PhotosRepo = PhotosRepoImpl(
-        apiService, context
+    fun providePhotosRepo(apiService: ApiService, dao :PhotoDao  , @ApplicationContext context: Context):PhotosRepo = PhotosRepoImpl(
+        apiService,dao, context
     )
 }

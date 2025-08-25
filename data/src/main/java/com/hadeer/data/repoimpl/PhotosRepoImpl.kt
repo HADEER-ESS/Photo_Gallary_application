@@ -6,13 +6,16 @@ import androidx.annotation.RequiresPermission
 import com.hadeer.data.CheckInternetConnectivity
 import com.hadeer.data.remote.ApiService
 import com.hadeer.domain.NetworkResponse
+import com.hadeer.domain.entity.Photo
 import com.hadeer.domain.entity.PhotoModel
 import com.hadeer.domain.entity.toGetData
+import com.hadeer.domain.entity.toMap
 import com.hadeer.domain.repo.PhotosRepo
 import java.io.IOException
 
 class PhotosRepoImpl (
      val apiService: ApiService,
+     val photoDao: PhotoDao,
      val context : Context
 ): PhotosRepo {
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
@@ -41,6 +44,14 @@ class PhotosRepoImpl (
             )
         }
 
+    }
+
+    override suspend fun getAllCachedData(): List<PhotoModel> {
+        return photoDao.getAllPhotosAsync().map { it.toMap() }
+    }
+
+    override suspend fun addNewItemData(item: Photo) {
+        photoDao.cachePhoto(item)
     }
 
 }

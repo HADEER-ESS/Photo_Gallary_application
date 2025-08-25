@@ -1,6 +1,7 @@
 [versions]
 agp = "8.11.1"
 converterGson = "3.0.0"
+coreTesting = "2.2.0"
 glide = "4.16.0"
 hiltAndroid = "2.57"
 kotlin = "2.2.0"
@@ -10,6 +11,8 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.1"
 kotlinxCoroutinesCore = "1.10.2"
+kotlinxCoroutinesTest = "1.7.3"
+kotlinxCoroutinesTestVersion = "1.6"
 lifecycleLivedataKtx = "2.9.2"
 lifecycleLivedataKtxVersion = "2.6.0"
 lifecycleViewmodelKtx = "2.6.0"
@@ -25,6 +28,7 @@ roomRuntime = "2.7.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 androidx-lifecycle-livedata-ktx-v260 = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtxVersion" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleLivedataKtx" }
@@ -47,6 +51,9 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-test-v16 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTestVersion" }
+kotlinx-coroutines-test-v173 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }

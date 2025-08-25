@@ -8,5 +8,5 @@ data class PhotosState(
     val apiError : String = "",
     val isSuccess : Boolean = false,
     val photosData : List<PhotoModel> = emptyList(),
-    val photosFromStorage : List<Photo> = emptyList()
+    val photosFromStorage : List<PhotoModel> = emptyList()
 )
