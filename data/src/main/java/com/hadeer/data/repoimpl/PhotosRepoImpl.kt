@@ -3,6 +3,8 @@ package com.hadeer.data.repoimpl
 import android.Manifest
 import android.content.Context
 import androidx.annotation.RequiresPermission
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import com.hadeer.data.CheckInternetConnectivity
 import com.hadeer.data.remote.ApiService
 import com.hadeer.domain.NetworkResponse
@@ -46,8 +48,10 @@ class PhotosRepoImpl (
 
     }
 
-    override suspend fun getAllCachedData(): List<PhotoModel> {
-        return photoDao.getAllPhotosAsync().map { it.toMap() }
+    override fun getAllCachedData(): LiveData<List<PhotoModel>> {
+        return photoDao.getAllPhotos().map { photos ->
+            photos.map { it.toMap() }
+        }
     }
 
     override suspend fun addNewItemData(item: Photo) {

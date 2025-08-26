@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.hadeer.data.CheckInternetConnectivity
 import com.hadeer.data.ThemePreferance
 import com.hadeer.data.remote.AppDataBase
@@ -66,7 +67,8 @@ class HomeFragment : Fragment() {
                     is PhotosIntent.NetworkFailed ->{
                         handleIsLoading(it.state.isLoading)
                         binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), it.state.photosFromStorage)
-                        Toast.makeText(requireContext(), it.state.apiError, Toast.LENGTH_LONG).show()
+                       // Toast.makeText(requireContext(), it.state.apiError, Toast.LENGTH_LONG).show()
+                        Snackbar.make(binding.root , it.state.apiError, Snackbar.LENGTH_LONG).show()
                     }
                     is PhotosIntent.Success->{
                         handleIsLoading(it.state.isLoading)

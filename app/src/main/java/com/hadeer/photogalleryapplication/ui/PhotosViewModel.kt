@@ -2,6 +2,9 @@ package com.hadeer.photogalleryapplication.ui
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.service.autofill.Transformation
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
@@ -17,6 +20,7 @@ import com.hadeer.domain.usecase.PhotoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,8 +28,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.coroutines.resume
 
 @HiltViewModel
 class PhotosViewModel @Inject constructor(
@@ -36,7 +43,15 @@ class PhotosViewModel @Inject constructor(
     private val _photosIntent = MutableSharedFlow<PhotosIntent>()
     val photosIntent = _photosIntent.asSharedFlow()
 
-     fun getPhotosData(){
+    private var viewModelJob = Job()
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+    private val UiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    
+
+    fun getPhotosData(){
         viewModelScope.launch {
             currentState = currentState.copy(
                 isLoading = true
@@ -75,7 +90,7 @@ class PhotosViewModel @Inject constructor(
                     )
                 }
                 is NetworkResponse.UnknownError ->{
-                    val storedData = getDataFromCache()
+                    val storedData =   getDataFromCache()
                     if(storedData.isNotEmpty()){
                         currentState = currentState.copy(
                             isLoading = false,
@@ -111,8 +126,8 @@ class PhotosViewModel @Inject constructor(
     }
 
     private suspend fun getDataFromCache() : List<PhotoModel>{
-        return withContext(Dispatchers.IO){
-            photoUseCase.getCachedPhotos()
+         return withContext(Dispatchers.IO){
+            photoUseCase.getCachedPhotos().awaitValue()
         }
     }
 
@@ -139,5 +154,25 @@ class PhotosViewModel @Inject constructor(
 
         return@withContext file.absolutePath // Save this in Room
     }
+
+    private suspend fun <T> LiveData<T>.awaitValue():T{
+        return withContext(Dispatchers.Main.immediate){
+            suspendCancellableCoroutine { cont ->
+                val observer = object : Observer<T>{
+                    override fun onChanged(value: T) {
+                        removeObserver(this)
+                        if(!cont.isCompleted){
+                            cont.resume(value)
+                        }
+                    }
+                }
+                observeForever(observer)
+                cont.invokeOnCancellation {
+                    removeObserver(observer)
+                }
+            }
+        }
+    }
+
 }
 

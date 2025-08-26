@@ -37,7 +37,6 @@
         android:indeterminate="true"
         android:visibility="gone"
         />
-
     <TextView
         android:id="@+id/error_network_message_txt"
         android:layout_width="match_parent"
@@ -50,5 +49,4 @@
         android:visibility="gone"
         android:text="@string/error_message_in_bo_data"
         />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

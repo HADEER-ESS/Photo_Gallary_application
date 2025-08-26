@@ -12,9 +12,6 @@ interface PhotoDao {
     @Query("SELECT * FROM photos")
     fun getAllPhotos() : LiveData<List<Photo>>
 
-    @Query("SELECT * FROM photos")
-    suspend fun getAllPhotosAsync():List<Photo>
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun cachePhoto(photo: Photo)
 }

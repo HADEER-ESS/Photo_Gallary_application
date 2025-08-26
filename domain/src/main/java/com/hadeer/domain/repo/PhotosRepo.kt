@@ -7,6 +7,6 @@ import com.hadeer.domain.entity.PhotoModel
 
 interface PhotosRepo {
     suspend fun getAllPhotos():NetworkResponse<List<PhotoModel>>
-    suspend fun getAllCachedData(): List<PhotoModel>
+    fun getAllCachedData(): LiveData<List<PhotoModel>>
     suspend fun addNewItemData(item : Photo)
 }
