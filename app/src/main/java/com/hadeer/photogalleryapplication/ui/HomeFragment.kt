@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
     private val viewModel : PhotosViewModel by viewModels()
+    private lateinit var imagesAdaptor: ImagesAdaptor
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +39,8 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel.getPhotosData()
+        imagesAdaptor = ImagesAdaptor()
+        binding.imageResponseContainer.adapter = imagesAdaptor
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -58,7 +61,7 @@ class HomeFragment : Fragment() {
                     is PhotosIntent.Failed ->{
                         handleIsLoading(it.state.isLoading)
                         if(it.state.photosFromStorage.isNotEmpty()){
-                            binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), it.state.photosFromStorage)
+                            imagesAdaptor.submitList(it.state.photosFromStorage)
                         }
                         if(!it.state.isSuccess){
                             Toast.makeText(requireContext(), it.state.apiError, Toast.LENGTH_LONG).show()
@@ -66,13 +69,13 @@ class HomeFragment : Fragment() {
                     }
                     is PhotosIntent.NetworkFailed ->{
                         handleIsLoading(it.state.isLoading)
-                        binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), it.state.photosFromStorage)
+                        imagesAdaptor.submitList(it.state.photosFromStorage)
                        // Toast.makeText(requireContext(), it.state.apiError, Toast.LENGTH_LONG).show()
                         Snackbar.make(binding.root , it.state.apiError, Snackbar.LENGTH_LONG).show()
                     }
                     is PhotosIntent.Success->{
                         handleIsLoading(it.state.isLoading)
-                        binding.imageResponseContainer.adapter = ImagesAdaptor(requireContext(), it.state.photosData)
+                        imagesAdaptor.submitList(it.state.photosData)
                     }
                 }
             }

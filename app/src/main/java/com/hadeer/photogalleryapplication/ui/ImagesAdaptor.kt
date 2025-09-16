@@ -4,17 +4,23 @@ import android.content.Context
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hadeer.domain.entity.PhotoModel
 import com.hadeer.photogalleryapplication.R
 import com.hadeer.photogalleryapplication.databinding.ImageItemBinding
 
-class ImagesAdaptor(val context: Context, val data : List<PhotoModel>):
-    RecyclerView.Adapter<ImagesAdaptor.PhotoViewModel>() {
+class ImagesAdaptor():
+//    RecyclerView.Adapter<ImagesAdaptor.PhotoViewModel>()  => before using DiffUtil
+//ListAdaptor will take care of you List modifications
+ListAdapter<PhotoModel , ImagesAdaptor.PhotoViewModel>(PhotosListDiffCallback())
+{
 
-    class PhotoViewModel(private val binding : ImageItemBinding):RecyclerView.ViewHolder(binding.root){
+    class PhotoViewModel(binding : ImageItemBinding):RecyclerView.ViewHolder(binding.root){
         val imageView = binding.imageRes
+        //the perfect place for OnClick Handling to create ClickListener to RecyclerView
 //        val text = binding.imagTextDesc
     }
 
@@ -24,17 +30,23 @@ class ImagesAdaptor(val context: Context, val data : List<PhotoModel>):
         return PhotoViewModel(view)
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
     override fun onBindViewHolder(holder: PhotoViewModel, position: Int) {
-        val itemData = data[position]
+        val itemData = getItem(position)
         val context = holder.itemView.context
         Glide.with(context)
             .load(itemData.url)
             .override(200,100)
             .into(holder.imageView)
         holder.imageView.contentDescription = itemData.alt
+    }
+}
+
+class PhotosListDiffCallback : DiffUtil.ItemCallback<PhotoModel>(){
+    override fun areItemsTheSame(oldItem: PhotoModel, newItem: PhotoModel): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: PhotoModel, newItem: PhotoModel): Boolean {
+        return oldItem == newItem
     }
 }

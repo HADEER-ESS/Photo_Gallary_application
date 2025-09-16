@@ -48,8 +48,6 @@ class PhotosViewModel @Inject constructor(
         super.onCleared()
         viewModelJob.cancel()
     }
-    private val UiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-    
 
     fun getPhotosData(){
         viewModelScope.launch {
