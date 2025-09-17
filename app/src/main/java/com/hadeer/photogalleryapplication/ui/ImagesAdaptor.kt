@@ -12,16 +12,23 @@ import com.hadeer.domain.entity.PhotoModel
 import com.hadeer.photogalleryapplication.R
 import com.hadeer.photogalleryapplication.databinding.ImageItemBinding
 
-class ImagesAdaptor():
+class ImagesAdaptor(val clickListener : PhotosClickListener):
 //    RecyclerView.Adapter<ImagesAdaptor.PhotoViewModel>()  => before using DiffUtil
 //ListAdaptor will take care of you List modifications
 ListAdapter<PhotoModel , ImagesAdaptor.PhotoViewModel>(PhotosListDiffCallback())
 {
 
-    class PhotoViewModel(binding : ImageItemBinding):RecyclerView.ViewHolder(binding.root){
+    class PhotoViewModel(val binding : ImageItemBinding):RecyclerView.ViewHolder(binding.root){
         val imageView = binding.imageRes
         //the perfect place for OnClick Handling to create ClickListener to RecyclerView
 //        val text = binding.imagTextDesc
+        fun bind(itemData: PhotoModel?, clickListener: PhotosClickListener) {
+            imageView.setOnClickListener {
+                itemData.let {
+                    clickListener.onClick(it!!)
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewModel {
@@ -32,6 +39,7 @@ ListAdapter<PhotoModel , ImagesAdaptor.PhotoViewModel>(PhotosListDiffCallback())
 
     override fun onBindViewHolder(holder: PhotoViewModel, position: Int) {
         val itemData = getItem(position)
+        holder.bind(itemData, clickListener)
         val context = holder.itemView.context
         Glide.with(context)
             .load(itemData.url)
@@ -49,4 +57,8 @@ class PhotosListDiffCallback : DiffUtil.ItemCallback<PhotoModel>(){
     override fun areContentsTheSame(oldItem: PhotoModel, newItem: PhotoModel): Boolean {
         return oldItem == newItem
     }
+}
+
+class PhotosClickListener(val clickListener : (id : Int) -> Unit){
+    fun onClick(item : PhotoModel) = clickListener(item.id?:0)
 }

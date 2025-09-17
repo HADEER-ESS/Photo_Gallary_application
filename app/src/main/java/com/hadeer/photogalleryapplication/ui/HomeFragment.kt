@@ -39,7 +39,9 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel.getPhotosData()
-        imagesAdaptor = ImagesAdaptor()
+        imagesAdaptor = ImagesAdaptor(PhotosClickListener {
+            item -> Toast.makeText(requireContext(), "photo id is ${item}" , Toast.LENGTH_LONG).show()
+        })
         binding.imageResponseContainer.adapter = imagesAdaptor
         // Inflate the layout for this fragment
         return binding.root
